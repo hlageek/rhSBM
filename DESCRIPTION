@@ -1,0 +1,35 @@
+Package: rhSBM
+Type: Package
+Title: Run hSBM in R
+Version: 0.1.0
+Author: c(
+     person(given = "Radim",
+            family = "Hladík",
+            role = c("aut"),
+            email = "radim.hladik@fulbrightmail.org",
+            comment = c(ORCID = "0000-0001-8078-6477")
+            )
+            )
+Maintainer: The package maintainer <radim.hladik@fulbrightmail.org>
+Description: Text pre-processing and topic modeling with hSBM via `reticulate`.
+  Independent Python setup may be required.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.2
+Imports: 
+    magrittr,
+    dplyr,
+    tidyr,
+    vroom,
+    reticulate,
+    purrr,
+    tibble,
+    quanteda,
+    stringr,
+    tidyselect,
+    udpipe,
+    parallel,
+    quanteda.textstats,
+    broom,
+    stats
