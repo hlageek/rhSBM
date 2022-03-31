@@ -7,8 +7,9 @@
 run_udpipe <- function(corpus, ud_model = "english-ewt-ud-2.5-191206.udpipe") {
 
   if (!file.exists(ud_model)) {
+    language <- gsub("(.*)-ud.*", "\\1", ud_model)
     # https://github.com/jwijffels/udpipe.models.ud.2.5/tree/master/inst/udpipe-ud-2.5-191206
-    udpipe::udpipe_download_model(ud_model)
+    udpipe::udpipe_download_model(language = language)
   }
 
   n_cores <- parallel::detectCores()-1
