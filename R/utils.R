@@ -15,6 +15,7 @@ splitter <- function(x) {
 #' @name test_norm
 #' @export
 test_norm <- function(x) {
+  set.seed(123)
   broom::tidy(shapiro.test(x)) %>% dplyr::pull(p.value)
 }
 
