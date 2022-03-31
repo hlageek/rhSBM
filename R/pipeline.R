@@ -40,7 +40,7 @@ pipeline <- function(titles = "titles.txt",
                         stopwords_threshold = stopwords_threshold)
     cat("Custom stopwords helper model removed.\n")
 
-  }
+  } else {empirical_stopwords <- NULL}
 
   processed <- process_text(titles,
     lemmatized,
