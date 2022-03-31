@@ -33,7 +33,7 @@ pipeline <- function(titles = "titles.txt",
 
   cat("Corpus was lemmatized.\n")
 
-  if (!is.null(sample_stopwords)) {
+  if (!is.null(stopwords_sample)) {
 
     empirical_stopwords <- customize_stopwords(corpus = corpus,
                         stopwords_sample = stopwords_sample,
