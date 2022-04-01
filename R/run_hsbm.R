@@ -27,7 +27,7 @@ run_hsbm <- function(src_docs,
 
   texts <- readLines(src_texts)
 
-  texts <- future::future_map_chr(texts, rhSBM::splitter,
+  texts <- furrr::future_map_chr(texts, rhSBM::splitter,
                              .options = furrr::furrr_options(seed = TRUE))
 
   model <- sbmtm()
