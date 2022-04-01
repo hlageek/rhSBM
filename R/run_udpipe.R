@@ -23,7 +23,7 @@ paste(udpipe::udpipe(text, object = ud_model)[, "lemma"], collapse = " ")
 
   lines <- readLines(corpus)
 
-  future::plan(future::multicore, workers = n_cores)
+  future::plan(future::multisession, workers = n_cores)
 
   res <- furrr::future_map_chr(lines, get_lemma, ud_model)
 

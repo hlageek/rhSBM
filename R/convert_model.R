@@ -11,7 +11,7 @@ convert_model <- function(model_src, level = NULL) {
   if (n_cores < 1) {
     n_cores <- 1
   }
-  future::plan(future::multicore, workers = n_cores)
+  future::plan(future::multisession, workers = n_cores)
 
   model <- reticulate::py_load_object(model_src)
 
