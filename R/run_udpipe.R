@@ -17,7 +17,9 @@ run_udpipe <- function(corpus, ud_model = "english-ewt-ud-2.5-191206.udpipe") {
   }
 
   get_lemma <- function(text, ud_model) {
-    paste(udpipe::udpipe(text, object = ud_model)[, "lemma"], collapse = " ")
+    paste(udpipe::udpipe(text, object = ud_model) %>%
+            dplyr::filter(!is.na(lemma)) %>%
+            dplyr::pull(lemma), collapse = " ")
   }
 
   lines <- readLines(corpus)
