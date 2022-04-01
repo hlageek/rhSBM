@@ -30,7 +30,7 @@ customize_stopwords <- function(corpus, stopwords_sample, stopwords_threshold) {
     (seq_along(model$documents) - 1),
     function(x) {
       model$topicdist(as.integer(x), 0L) %>%
-        purrr::map(make_df_doc) %>%
+        furrr::future_map(make_df_doc, .options = furrr::furrr_options(seed = TRUE)) %>%
         dplyr::bind_cols()
     }, .options = furrr::furrr_options(seed = TRUE)
   )
