@@ -6,6 +6,7 @@
 convert_model <- function(model_src, level = NULL) {
   make_df_doc <- weight <- topic <- freq <- NULL
   # model_src <- "topic_model_202204011237.pickle"
+  # level <- NULL
 
   n_cores <- future::availableCores() - 1
   if (n_cores < 1) {
@@ -54,17 +55,21 @@ convert_model <- function(model_src, level = NULL) {
       tidyr::pivot_wider(names_from = topic, values_from = weight)
   }
 
+  bind_df <- function(x) {
+    furrr::future_map(x, make_df_doc, .options = furrr::furrr_options(seed = TRUE)) %>%
+      dplyr::bind_cols()
+  }
+
   doc_seq <- (seq_along(model$documents) - 1)
   model_fun <- model$topicdist
 
   for (i in levels) {
+
+    doc_top <- furrr::future_map(doc_seq, ~model_fun(as.integer(.x), as.integer(i)))
+
     docs_df <- furrr::future_map(
-      doc_seq,
-      function (x) {
-        model_fun(as.integer(x), i) %>%
-          furrr::future_map(make_df_doc, .options = furrr::furrr_options(seed = TRUE)) %>%
-          dplyr::bind_cols()
-      }
+      doc_top, bind_df,
+      .options = furrr::furrr_options(seed = TRUE)
     ) %>%
       dplyr::bind_rows(.id = "doc_id") %>%
       dplyr::mutate(level = i + 1) %>%
