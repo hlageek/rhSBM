@@ -34,7 +34,7 @@ customize_stopwords <- function(corpus, stopwords_sample, stopwords_threshold) {
         dplyr::bind_cols()
     }, .options = furrr::furrr_options(seed = TRUE)
   )
-
+cat("1")
   stop_topics <- docs_df %>%
     furrr::future_map_dfr(test_norm, .options = furrr::furrr_options(seed = TRUE)) %>%
     tidyr::pivot_longer(
@@ -48,6 +48,7 @@ customize_stopwords <- function(corpus, stopwords_sample, stopwords_threshold) {
     as.integer()
 
   empirical_stopwords <- c()
+  cat("2")
 
   for (i in stop_topics) {
     empirical_stopwords <- c(
