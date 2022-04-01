@@ -55,14 +55,13 @@ convert_model <- function(model_src, level = NULL) {
   }
 
   for (i in levels) {
-    docs_df <- furrr::future_map(
+    docs_df <- purrr::map(
       (seq_along(model$documents) - 1),
       function(x) {
         model$topicdist(as.integer(x), i) %>%
           furrr::future_map(make_df_doc, .options = furrr::furrr_options(seed = TRUE)) %>%
           dplyr::bind_cols()
-      },
-      .options = furrr::furrr_options(seed = TRUE)
+      }
     ) %>%
       dplyr::bind_rows(.id = "doc_id") %>%
       dplyr::mutate(level = i + 1) %>%
