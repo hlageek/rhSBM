@@ -5,7 +5,7 @@
 
 convert_model <- function(model_src, level = NULL) {
   make_df_doc <- weight <- topic <- freq <- NULL
-  # model_src <- "topic_model_202203302125.pickle"
+  # model_src <- "topic_model_202204011237.pickle"
 
   n_cores <- future::availableCores() - 1
   if (n_cores < 1) {
@@ -55,9 +55,9 @@ convert_model <- function(model_src, level = NULL) {
   }
 
   for (i in levels) {
-    docs_df <- purrr::map(
+    docs_df <- furrr::future_map(
       (seq_along(model$documents) - 1),
-      function(x) {
+      function(x, model = model) {
         model$topicdist(as.integer(x), i) %>%
           furrr::future_map(make_df_doc, .options = furrr::furrr_options(seed = TRUE)) %>%
           dplyr::bind_cols()
