@@ -7,6 +7,12 @@ convert_model <- function(model_src, level = NULL) {
   make_df_doc <- weight <- topic <- freq <- NULL
   # model_src <- "topic_model_202203302125.pickle"
 
+  n_cores <- future::future::availableCores()-1
+  if (n_cores < 1) {
+    n_cores <- 1
+  }
+  future::plan(future::multicore, workers = n_cores)
+
   model <- reticulate::py_load_object(model_src)
 
   if (is.null(level)) {
@@ -24,12 +30,12 @@ convert_model <- function(model_src, level = NULL) {
   }
 
   make_df_inside <- function(list_item) {
-    purrr::map(list_item, make_df) %>% dplyr::bind_rows()
+    furrr::future_map(list_item, make_df) %>% dplyr::bind_rows()
   }
 
   for (i in levels) {
     topics_df <- model$topics(as.integer(i), model$get_V()) %>%
-      purrr::map(make_df_inside) %>%
+      furrr::future_map(make_df_inside) %>%
       dplyr::bind_rows(.id = "topic") %>%
       dplyr::mutate(topic = paste0("topic_", (as.integer(topic) + 1))) %>%
       dplyr::mutate(level = i + 1) %>%
@@ -49,11 +55,11 @@ convert_model <- function(model_src, level = NULL) {
   }
 
   for (i in levels) {
-    docs_df <- purrr::map(
+    docs_df <- furrr::future_map(
       (seq_along(model$documents) - 1),
       function(x) {
         model$topicdist(as.integer(x), i) %>%
-          purrr::map(make_df_doc) %>%
+          furrr::future_map(make_df_doc) %>%
           dplyr::bind_cols()
       }
     ) %>%

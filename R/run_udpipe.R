@@ -12,18 +12,20 @@ run_udpipe <- function(corpus, ud_model = "english-ewt-ud-2.5-191206.udpipe") {
     udpipe::udpipe_download_model(language = language)
   }
 
-  n_cores <- parallel::detectCores()-1
-  if (!n_cores) {
+  n_cores <- future::future::availableCores()-1
+  if (n_cores < 1) {
     n_cores <- 1
   }
 
   get_lemma <- function(text, ud_model) {
-paste(udpipe::udpipe(text, object = ud_model, parallel.cores = n_cores)[, "lemma"], collapse = " ")
+paste(udpipe::udpipe(text, object = ud_model)[, "lemma"], collapse = " ")
     }
 
   lines <- readLines(corpus)
 
-  res <- purrr::map_chr(lines, get_lemma, ud_model)
+  future::plan(future::multicore, workers = n_cores)
+
+  res <- furrr::future_map_chr(lines, get_lemma, ud_model)
 
   corpus_lemmatized <- paste0(gsub("\\.txt", "", basename(corpus)), "_lemmatized.txt")
   write.table(res, corpus_lemmatized, quote = FALSE, row.names = FALSE, col.names = FALSE)
