@@ -7,7 +7,7 @@ convert_model <- function(model_src, level = NULL) {
   make_df_doc <- weight <- topic <- freq <- NULL
   # model_src <- "topic_model_202203302125.pickle"
 
-  n_cores <- future::future::availableCores()-1
+  n_cores <- future::availableCores()-1
   if (n_cores < 1) {
     n_cores <- 1
   }

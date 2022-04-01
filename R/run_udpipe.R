@@ -12,7 +12,7 @@ run_udpipe <- function(corpus, ud_model = "english-ewt-ud-2.5-191206.udpipe") {
     udpipe::udpipe_download_model(language = language)
   }
 
-  n_cores <- future::future::availableCores()-1
+  n_cores <- future::availableCores()-1
   if (n_cores < 1) {
     n_cores <- 1
   }
