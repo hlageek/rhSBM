@@ -59,6 +59,8 @@ customize_stopwords <- function(corpus, stopwords_sample, stopwords_threshold) {
     )
   }
 
+  if (is.null(empirical_stopwords)) empirical_stopwords <- ""
+
   cat("Writting custom stopwords.\n")
 
   writeLines(empirical_stopwords, "custom_stopwords.txt")
