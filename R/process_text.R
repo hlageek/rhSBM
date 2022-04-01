@@ -41,7 +41,6 @@ process_text <- function(src_docs,
   # remove_url = TRUE
   # remove_separators = TRUE
   # split_hyphens = FALSE
-  # split_tags = FALSE
   # padding = FALSE
   # stopwords = NULL
   # min_termfreq = NULL

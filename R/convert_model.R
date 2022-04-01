@@ -7,7 +7,7 @@ convert_model <- function(model_src, level = NULL) {
   make_df_doc <- weight <- topic <- freq <- NULL
   # model_src <- "topic_model_202203302125.pickle"
 
-  n_cores <- future::availableCores()-1
+  n_cores <- future::availableCores() - 1
   if (n_cores < 1) {
     n_cores <- 1
   }
@@ -41,7 +41,7 @@ convert_model <- function(model_src, level = NULL) {
       dplyr::mutate(level = i + 1) %>%
       dplyr::relocate(level, .before = topic)
 
-    cat(paste0("Writing word-topic distributions at level ", i+1, ".\n"))
+    cat(paste0("Writing word-topic distributions at level ", i + 1, ".\n"))
 
     vroom::vroom_write(topics_df, paste0(gsub("\\.pickle", "", basename(model_src)), "_topics_level_", i + 1, ".tsv"))
   }
@@ -61,17 +61,16 @@ convert_model <- function(model_src, level = NULL) {
         model$topicdist(as.integer(x), i) %>%
           furrr::future_map(make_df_doc, .options = furrr::furrr_options(seed = TRUE)) %>%
           dplyr::bind_cols()
-      }, .options = furrr::furrr_options(seed = TRUE)
+      },
+      .options = furrr::furrr_options(seed = TRUE)
     ) %>%
       dplyr::bind_rows(.id = "doc_id") %>%
       dplyr::mutate(level = i + 1) %>%
       dplyr::relocate(level, .after = doc_id)
 
-    cat(paste0("Writing document-topic distributions at level ", i+1, ".\n"))
+    cat(paste0("Writing document-topic distributions at level ", i + 1, ".\n"))
 
     vroom::vroom_write(docs_df, paste0(gsub("\\.pickle", "", basename(model_src)), "_documents_level_", i + 1, ".tsv"))
-
-
   }
 
   doc_ids_df <- tibble::enframe(model$documents, name = "doc_id", value = "title")
