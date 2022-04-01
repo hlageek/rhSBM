@@ -65,7 +65,7 @@ convert_model <- function(model_src, level = NULL) {
 
   for (i in levels) {
 
-    doc_top <- furrr::future_map(doc_seq, ~model_fun(as.integer(.x), as.integer(i)))
+    doc_top <- purrr::map(doc_seq, ~model_fun(as.integer(.x), as.integer(i)))
 
     docs_df <- furrr::future_map(
       doc_top, bind_df,
