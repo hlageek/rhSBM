@@ -9,3 +9,6 @@ corpus.txt
 *.udpipe
 titles.txt
 *.txt
+*.txt
+*.tsv
+*.pickle

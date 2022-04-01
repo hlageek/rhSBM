@@ -55,11 +55,13 @@ convert_model <- function(model_src, level = NULL) {
   }
 
   doc_seq <- (seq_along(model$documents) - 1)
+  model_fun <- model$topicdist
+
   for (i in levels) {
-    docs_df <- furrr::future_map2(
-      doc_seq, model,
-      ~function (.x, .y, i) {
-        .y$topicdist(as.integer(.x), i) %>%
+    docs_df <- furrr::future_map(
+      doc_seq,
+      function (x) {
+        model_fun(as.integer(x), i) %>%
           furrr::future_map(make_df_doc, .options = furrr::furrr_options(seed = TRUE)) %>%
           dplyr::bind_cols()
       }
