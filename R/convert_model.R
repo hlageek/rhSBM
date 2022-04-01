@@ -54,11 +54,12 @@ convert_model <- function(model_src, level = NULL) {
       tidyr::pivot_wider(names_from = topic, values_from = weight)
   }
 
+  doc_seq <- (seq_along(model$documents) - 1)
   for (i in levels) {
-    docs_df <- furrr::future_map(
-      (seq_along(model$documents) - 1),
-      function(x, model = model) {
-        model$topicdist(as.integer(x), i) %>%
+    docs_df <- furrr::future_map2(
+      doc_seq, model,
+      function(x, y) {
+        y$topicdist(as.integer(x), i) %>%
           furrr::future_map(make_df_doc, .options = furrr::furrr_options(seed = TRUE)) %>%
           dplyr::bind_cols()
       }
