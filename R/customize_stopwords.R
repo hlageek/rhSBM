@@ -26,17 +26,17 @@ customize_stopwords <- function(corpus, stopwords_sample, stopwords_threshold) {
   }
 
 
-  docs_df <- purrr::map_df(
+  docs_df <- furrr::future_map_dfr(
     (seq_along(model$documents) - 1),
     function(x) {
       model$topicdist(as.integer(x), 0L) %>%
         purrr::map(make_df_doc) %>%
         dplyr::bind_cols()
-    }
+    }, .options = furrr::furrr_options(seed = TRUE)
   )
 
   stop_topics <- docs_df %>%
-    purrr::map_df(test_norm) %>%
+    furrr::future_map_dfr(test_norm, .options = furrr::furrr_options(seed = TRUE)) %>%
     tidyr::pivot_longer(
       cols = everything(),
       names_to = "topic",
