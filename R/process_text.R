@@ -18,7 +18,6 @@ process_text <- function(src_docs,
                          remove_url = TRUE,
                          remove_separators = TRUE,
                          split_hyphens = FALSE,
-                         split_tags = FALSE,
                          padding = FALSE,
                          stopwords = NULL,
                          min_termfreq = NULL,
@@ -72,7 +71,6 @@ process_text <- function(src_docs,
     remove_url = remove_url,
     remove_separators = remove_separators,
     split_hyphens = split_hyphens,
-    split_tags = split_tags,
     padding = padding
   ) %>%
     quanteda::tokens_tolower() %>%

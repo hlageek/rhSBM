@@ -25,7 +25,7 @@ paste(udpipe::udpipe(text, object = ud_model)[, "lemma"], collapse = " ")
 
   future::plan(future::multisession, workers = n_cores)
 
-  res <- furrr::future_map_chr(lines, get_lemma, ud_model, .options = furrr::furrr_options(seed = NULL))
+  res <- furrr::future_map_chr(lines, get_lemma, ud_model, .options = furrr::furrr_options(seed = TRUE))
 
   corpus_lemmatized <- paste0(gsub("\\.txt", "", basename(corpus)), "_lemmatized.txt")
   write.table(res, corpus_lemmatized, quote = FALSE, row.names = FALSE, col.names = FALSE)
