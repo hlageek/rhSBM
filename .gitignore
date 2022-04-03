@@ -12,3 +12,4 @@ titles.txt
 *.txt
 *.tsv
 *.pickle
+*.csv

@@ -40,8 +40,8 @@ run_hsbm <- function(src_docs,
 
   model$fit()
 
-  model_file_name <- paste0("./topic_model_", format(Sys.time(), "%Y%m%d%H%M"), ".pickle")
-  reticulate::py_save_object(model, paste0("./", model_file_name))
+  model_file_name <- paste0("topic_model_", format(Sys.time(), "%Y%m%d%H%M"), ".pickle")
+  reticulate::py_save_object(model, paste0(model_file_name))
 
   cat(paste("Model run finished.\nModel saved as", model_file_name, "\n"))
 

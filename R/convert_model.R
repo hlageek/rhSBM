@@ -36,7 +36,7 @@ convert_model <- function(model_src, level = NULL) {
 
   for (i in levels) {
     topics_df <- model$topics(as.integer(i), model$get_V()) %>%
-      furrr::future_map(make_df_inside, .options = furrr::furrr_options(seed = TRUE)) %>%
+      furrr::future_map(make_df_inside, .options = furrr::furrr_options(seed = NULL)) %>%
       dplyr::bind_rows(.id = "topic") %>%
       dplyr::mutate(topic = paste0("topic_", (as.integer(topic) + 1))) %>%
       dplyr::mutate(level = i + 1) %>%
@@ -56,7 +56,7 @@ convert_model <- function(model_src, level = NULL) {
   }
 
   bind_df <- function(x) {
-    furrr::future_map(x, make_df_doc, .options = furrr::furrr_options(seed = TRUE)) %>%
+    furrr::future_map(x, make_df_doc, .options = furrr::furrr_options(seed = NULL)) %>%
       dplyr::bind_cols()
   }
 
@@ -65,7 +65,8 @@ convert_model <- function(model_src, level = NULL) {
 
   for (i in levels) {
 
-    doc_top <- purrr::map(doc_seq, ~model_fun(as.integer(.x), as.integer(i)))
+    doc_top <- furrr::future_map(doc_seq, ~model_fun(as.integer(.x), as.integer(i)),
+                                 .options = furrr::furrr_options(seed = NULL))
 
     docs_df <- furrr::future_map(
       doc_top, bind_df,
