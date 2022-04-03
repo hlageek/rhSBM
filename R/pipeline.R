@@ -36,8 +36,8 @@ pipeline <- function(titles = "titles.txt",
 
     corpus_sample <- make_sample(lemmatized, stopwords_sample = stopwords_sample)
 
-    processed_sample <- process_text(titles,
-                              lemmatized,
+    processed_sample <- process_text(src_docs = NULL,
+                              src_texts = lemmatized,
                               replace_from = replace_from,
                               replace_to = replace_to,
                               collocations = collocations,
@@ -58,7 +58,7 @@ pipeline <- function(titles = "titles.txt",
                               docfreq_type = docfreq_type
     )
 
-    empirical_stopwords <- customize_stopwords(corpus = processed_sample$titles_processed,
+    empirical_stopwords <- customize_stopwords(corpus = processed_sample$corpus_processed,
                         stopwords_threshold = stopwords_threshold)
     cat("Custom stopwords helper model removed.\n")
 
