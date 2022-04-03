@@ -15,25 +15,10 @@ customize_stopwords <- function(corpus, stopwords_sample, stopwords_threshold) {
 
   model <- reticulate::py_load_object(model_file)
 
-  file.remove(c("sample_c.txt", model_file))
+  # file.remove(c("sample_c.txt", model_file))
 
-  make_df_doc <- function(list_src) {
-    data.frame(
-      topic = paste0("topic_", (purrr::pluck(list_src, 1) + 1)),
-      weight = purrr::pluck(list_src, 2)
-    ) %>%
-      tidyr::pivot_wider(names_from = topic, values_from = weight)
-  }
-
-  extract_topics <- function(x) {
-  model$topicdist(as.integer(x), 0L) %>%
-    furrr::future_map(make_df_doc, .options = furrr::furrr_options(seed = TRUE)) %>%
-    dplyr::bind_cols()
-  }
-  docs_df <- purrr::map_df(
-    .x = (seq_along(model$documents) - 1),
-    ~extract_topics(.x)
-  )
+  docs_df <- tibble::as_tibble(t(model$get_groups(l=0L)[["p_tw_d"]]),
+                    .name_repair = ~paste0("topic_", seq_len(length(.x))))
 
   stop_topics <- docs_df %>%
     furrr::future_map_dfr(test_norm, .options = furrr::furrr_options(seed = TRUE)) %>%

@@ -12,3 +12,5 @@ titles.txt
 *.txt
 *.tsv
 *.pickle
+topsbm_level_0_topic-dist.csv
+*.csv

@@ -23,57 +23,31 @@ convert_model <- function(model_src, level = NULL) {
     levels <- level - 1
   }
 
-  make_df <- function(list_src) {
-    data.frame(
-      term = purrr::pluck(list_src, 1),
-      weight = purrr::pluck(list_src, 2)
-    )
-  }
-
-  make_df_inside <- function(list_item) {
-    furrr::future_map(list_item, make_df, .options = furrr::furrr_options(seed = TRUE)) %>% dplyr::bind_rows()
-  }
 
   for (i in levels) {
-    topics_df <- model$topics(as.integer(i), model$get_V()) %>%
-      furrr::future_map(make_df_inside, .options = furrr::furrr_options(seed = TRUE)) %>%
-      dplyr::bind_rows(.id = "topic") %>%
-      dplyr::mutate(topic = paste0("topic_", (as.integer(topic) + 1))) %>%
-      dplyr::mutate(level = i + 1) %>%
-      dplyr::relocate(level, .before = topic)
+
+    topics_df <- tibble::as_tibble(model$get_groups(l = 0L)[["p_w_tw"]],
+      .name_repair = ~ paste0("topic_", seq_len(length(.x)))
+    ) %>%
+      dplyr::bind_cols(
+        term = model$words,
+        level = i + 1
+      ) %>%
+      dplyr::relocate(term, 1) %>%
+      dplyr::relocate(level, 1)
+
 
     cat(paste0("Writing word-topic distributions at level ", i + 1, ".\n"))
 
-    vroom::vroom_write(topics_df, paste0(gsub("\\.pickle", "", basename(model_src)), "_topics_level_", i + 1, ".tsv"))
+    vroom::vroom_write(topics_df,
+                       paste0(gsub("\\.pickle", "", basename(model_src)), "_topics_level_", i + 1, ".tsv"))
   }
 
-  make_df_doc <- function(list_src) {
-    data.frame(
-      topic = paste0("topic_", (purrr::pluck(list_src, 1) + 1)),
-      weight = purrr::pluck(list_src, 2)
-    ) %>%
-      tidyr::pivot_wider(names_from = topic, values_from = weight)
-  }
-
-  bind_df <- function(x) {
-    furrr::future_map(x, make_df_doc, .options = furrr::furrr_options(seed = TRUE)) %>%
-      dplyr::bind_cols()
-  }
-
-  doc_seq <- (seq_along(model$documents) - 1)
-  model_fun <- model$topicdist
 
   for (i in levels) {
-
-    doc_top <- purrr::map(doc_seq, ~model_fun(as.integer(.x), as.integer(i)))
-
-    docs_df <- furrr::future_map(
-      doc_top, bind_df,
-      .options = furrr::furrr_options(seed = TRUE)
-    ) %>%
-      dplyr::bind_rows(.id = "doc_id") %>%
-      dplyr::mutate(level = i + 1) %>%
-      dplyr::relocate(level, .after = doc_id)
+    docs_df <- tibble::as_tibble(t(model$get_groups(l = as.integer(i))[["p_tw_d"]]),
+      .name_repair = ~ paste0("topic_", seq_len(length(docs_df)))
+    )
 
     cat(paste0("Writing document-topic distributions at level ", i + 1, ".\n"))
 
