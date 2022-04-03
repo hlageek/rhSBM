@@ -46,7 +46,7 @@ convert_model <- function(model_src, level = NULL) {
 
   for (i in levels) {
     docs_df <- tibble::as_tibble(t(model$get_groups(l = as.integer(i))[["p_tw_d"]]),
-      .name_repair = ~ paste0("topic_", seq_len(length(docs_df)))
+      .name_repair = ~ paste0("topic_", seq_len(length(.x)))
     )
 
     cat(paste0("Writing document-topic distributions at level ", i + 1, ".\n"))
