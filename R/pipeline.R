@@ -34,8 +34,31 @@ pipeline <- function(titles = "titles.txt",
 
   if (!is.null(stopwords_sample)) {
 
-    empirical_stopwords <- customize_stopwords(corpus = corpus,
-                        stopwords_sample = stopwords_sample,
+    corpus_sample <- make_sample(lemmatized, stopwords_sample = stopwords_sample)
+
+    processed_sample <- process_text(titles,
+                              lemmatized,
+                              replace_from = replace_from,
+                              replace_to = replace_to,
+                              collocations = collocations,
+                              min_nchar = min_nchar,
+                              remove_punct = remove_punct,
+                              remove_symbols = remove_symbols,
+                              remove_numbers = remove_numbers,
+                              remove_url = remove_url,
+                              remove_separators = remove_separators,
+                              split_hyphens = split_hyphens,
+                              padding = padding,
+                              stopwords = c(stopwords, empirical_stopwords),
+                              min_termfreq = min_termfreq,
+                              max_termfreq = max_termfreq,
+                              termfreq_type = termfreq_type,
+                              min_docfreq = min_docfreq,
+                              max_docfreq = max_docfreq,
+                              docfreq_type = docfreq_type
+    )
+
+    empirical_stopwords <- customize_stopwords(corpus = processed_sample$titles_processed,
                         stopwords_threshold = stopwords_threshold)
     cat("Custom stopwords helper model removed.\n")
 

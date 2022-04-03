@@ -5,7 +5,7 @@
 \title{Preprocessing of raw or lemmatized text data}
 \usage{
 process_text(
-  src_docs,
+  src_docs = NULL,
   src_texts,
   target_docs = "titles_processed.txt",
   target_texts = "corpus_processed.txt",

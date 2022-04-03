@@ -3,15 +3,9 @@
 #' @name customize_stopwords
 #' @export
 
-customize_stopwords <- function(corpus, stopwords_sample, stopwords_threshold) {
+customize_stopwords <- function(corpus_sample = "corpus_sample.txt", stopwords_threshold) {
 
-  lines <- readLines(corpus)
-  sample_size <- round(length(lines) * stopwords_sample)
-  sample_index <- sample(lines, sample_size)
-
-  write.table(sample_index, "sample_c.txt", quote = FALSE, row.names = FALSE, col.names = FALSE)
-
-  model_file <- run_hsbm(src_docs = NULL, "sample_c.txt")
+  model_file <- run_hsbm(src_docs = NULL, corpus_sample)
 
   model <- reticulate::py_load_object(model_file)
 

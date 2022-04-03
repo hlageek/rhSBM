@@ -4,7 +4,7 @@
 #' @importFrom utils write.table
 #' @export
 
-process_text <- function(src_docs,
+process_text <- function(src_docs = NULL,
                          src_texts,
                          target_docs = "titles_processed.txt",
                          target_texts = "corpus_processed.txt",
@@ -50,8 +50,13 @@ process_text <- function(src_docs,
   # max_docfreq = NULL
   # docfreq_type = c("count", "prop", "rank", "quantile")
 
-  docs <- readLines(src_docs)
   lines <- readLines(src_texts)
+
+  if (!is.null(src_docs)) {
+  docs <- readLines(src_docs)
+  } else {
+    docs <- seq_along(length(lines))
+    }
 
   names(lines) <- docs
 

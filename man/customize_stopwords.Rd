@@ -4,7 +4,7 @@
 \alias{customize_stopwords}
 \title{Extract empirical stopwords}
 \usage{
-customize_stopwords(corpus, stopwords_sample, stopwords_threshold)
+customize_stopwords(corpus_sample = "corpus_sample.txt", stopwords_threshold)
 }
 \description{
 Extract empirical stopwords
