@@ -1,63 +1,63 @@
-Anisotropic_liquid Chemical_physics
-Aureus_Sciences Experimental_physics
-Bioinformatics Experimental_physics
-BioUML Experimental_physics
-Chemical_physics Chemical_physics
-Complementary_experiments Experimental_physics
-Computational_biology Experimental_physics
-De_novo_transcriptome_assembly Experimental_physics
-Dynamic_mode_decomposition Experimental_physics
-Dynamic_nuclear_polarisation Chemical_physics
-Effective_field_theory Chemical_physics
-Einstein–de_Haas_effect Experimental_physics
-Electrostatic_deflection_(structural_element) Chemical_physics
-Elevator_paradox_(physics) Experimental_physics
-Empirical_formula Experimental_physics
-Enzyme_Function_Initiative Experimental_physics
-Euler's_laws_of_motion Experimental_physics
-Experimental_physics Experimental_physics
-Faraday_cup_electrometer Experimental_physics
-Folding@home Experimental_physics
-Foldit Experimental_physics
-Fragment_separator Experimental_physics
-Fuel_mass_fraction Chemical_physics
-Holometer Experimental_physics
-IEEE/ACM_Transactions_on_Computational_Biology_and_Bioinformatics Experimental_physics
-International_Society_for_Computational_Biology Experimental_physics
-Journal_of_Computational_Biology Experimental_physics
-K-mer Experimental_physics
-Knight_shift Chemical_physics
-Knotted_protein Experimental_physics
-Law_of_Maximum Experimental_physics
-Line_source Experimental_physics
-List_of_Directors_General_of_CERN Experimental_physics
-Louis_and_Beatrice_Laufer_Center_for_Physical_and_Quantitative_Biology Experimental_physics
-Magic_angle_(EELS) Chemical_physics
-McConnell_equation Chemical_physics
-Molecular_beam Chemical_physics
-Molecular_vibration Chemical_physics
-Newton's_laws_of_motion Experimental_physics
-Nuclear_Overhauser_effect Chemical_physics
-Particle-induced_X-ray_emission Experimental_physics
-Pauli_effect Experimental_physics
-Philosophical_interpretation_of_classical_physics Experimental_physics
-Photofragment-ion_imaging Chemical_physics
-Point_source Experimental_physics
-Polarizability Chemical_physics
-Premier_Biosoft Experimental_physics
-Quantum_oscillations_(experimental_technique) Experimental_physics
-Quantum_solvent Chemical_physics
-Reactive_empirical_bond_order Chemical_physics
-Ripple_tank Experimental_physics
-Rotating_wave_approximation Chemical_physics
-Rotational_transition Chemical_physics
-Rovibrational_coupling Chemical_physics
-RRKM_theory Chemical_physics
-Sepp_Hochreiter Experimental_physics
-SLAC_National_Accelerator_Laboratory Experimental_physics
-SnoRNA_prediction_software Experimental_physics
-Uncertainty Experimental_physics
-Wave_tank Experimental_physics
-X-ray_crystal_truncation_rod Experimental_physics
-X-ray_standing_waves Experimental_physics
-Ziff-Gulari-Barshad_model Chemical_physics
+1
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+2
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+3
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+4
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+5
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+6
+60
+61
+62
+63
+7
+8
+9

@@ -55,7 +55,7 @@ process_text <- function(src_docs = NULL,
   if (!is.null(src_docs)) {
   docs <- readLines(src_docs)
   } else {
-    docs <- seq_along(length(lines))
+    docs <- 1:length(lines)
     }
 
   names(lines) <- docs
