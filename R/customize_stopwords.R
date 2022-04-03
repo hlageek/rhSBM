@@ -11,15 +11,14 @@ customize_stopwords <- function(corpus, stopwords_sample, stopwords_threshold) {
 
   write.table(sample_index, "sample_c.txt", quote = FALSE, row.names = FALSE, col.names = FALSE)
 
-
   model_file <- run_hsbm(src_docs = NULL, "sample_c.txt")
 
   model <- reticulate::py_load_object(model_file)
 
-  # file.remove(c("sample_c.txt", model_file))
+  file.remove(c("sample_c.txt", model_file))
 
   make_df_doc <- function(list_src) {
-   data.frame(
+    data.frame(
       topic = paste0("topic_", (purrr::pluck(list_src, 1) + 1)),
       weight = purrr::pluck(list_src, 2)
     ) %>%
@@ -28,17 +27,16 @@ customize_stopwords <- function(corpus, stopwords_sample, stopwords_threshold) {
 
   extract_topics <- function(x) {
   model$topicdist(as.integer(x), 0L) %>%
-    furrr::future_map(make_df_doc, .options = furrr::furrr_options(seed = NULL)) %>%
+    furrr::future_map(make_df_doc, .options = furrr::furrr_options(seed = TRUE)) %>%
     dplyr::bind_cols()
   }
-  docs_df <- furrr::future_map_dfr(
+  docs_df <- purrr::map_df(
     .x = (seq_along(model$documents) - 1),
-    ~extract_topics(.x),
-    .options = furrr::furrr_options(seed = NULL)
+    ~extract_topics(.x)
   )
 
   stop_topics <- docs_df %>%
-    furrr::future_map_dfr(test_norm, .options = furrr::furrr_options(seed = NULL)) %>%
+    furrr::future_map_dfr(test_norm, .options = furrr::furrr_options(seed = TRUE)) %>%
     tidyr::pivot_longer(
       cols = everything(),
       names_to = "topic",
