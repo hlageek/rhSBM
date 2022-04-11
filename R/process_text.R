@@ -113,18 +113,11 @@ process_text <- function(src_docs = NULL,
       docfreq_type = c("count", "prop", "rank", "quantile")
     )
 
-  texts_df <- texts_dfm %>% quanteda::convert("data.frame", docid_field = "doc_id")
-  col_sel <- setdiff(colnames(texts_df), "doc_id")
+  texts_list <- texts_dfm %>% quanteda::convert("tripletlist", docid_field = "doc_id")
 
-  texts_df <- texts_df %>%
-    dplyr::mutate(dplyr::across(where(is.numeric), ~ dplyr::na_if(., 0))) %>%
-    tidyr::pivot_longer(
-      cols = tidyselect::all_of(col_sel),
-      names_to = "word",
-      values_to = "freq",
-      values_drop_na = TRUE
-    ) %>%
-    dplyr::filter(freq > 0) %>%
+  texts_df <- tibble::tibble(doc_id = texts_list$document,
+                             word = texts_list$feature,
+                             freq = texts_list$frequency) %>%
     dplyr::group_by(doc_id) %>%
     dplyr::summarise(text = paste0(rep(word, freq), collapse = " "))
 
