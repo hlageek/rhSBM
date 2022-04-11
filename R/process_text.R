@@ -111,7 +111,7 @@ process_text <- function(src_docs = NULL,
                      into = c("word_1", "word_2", "word_3"),
                      regex = "([[:alnum:]]+) ([[:alnum:]]+) ([[:alnum:]]+)",
                      remove = FALSE) %>%
-      dplyr::filter(word_1 != word_2 | word_1 != word_3,
+      dplyr::filter(word_1 != word_2 | word_1 != word_3 | word_2 != word_3,
                     count > min_ngram_count) %>%
       tidyr::unite(collocation, c(word_1, word_2, word_3), sep = " ") %>%
       dplyr::pull(collocation)
