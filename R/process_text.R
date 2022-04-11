@@ -11,6 +11,7 @@ process_text <- function(src_docs = NULL,
                          replace_from = NULL,
                          replace_to = NULL,
                          collocations = TRUE,
+                         min_ngram_count = 1,
                          min_nchar = NULL,
                          remove_punct = TRUE,
                          remove_symbols = TRUE,
@@ -34,7 +35,8 @@ process_text <- function(src_docs = NULL,
   # replace_from = NULL
   # replace_to = NULL
   # collocations = TRUE
-  # min_nchar = NULL
+  # min_nchar = 3
+  # min_ngram_count = 100
   # remove_punct = TRUE
   # remove_symbols = TRUE
   # remove_numbers = TRUE
@@ -68,7 +70,7 @@ process_text <- function(src_docs = NULL,
     }
   }
 
-  corpus <- quanteda::tokens(lines,
+  tokens <- quanteda::tokens(lines,
     remove_punct = remove_punct,
     remove_symbols = remove_symbols,
     remove_numbers = remove_numbers,
@@ -87,17 +89,35 @@ process_text <- function(src_docs = NULL,
 
   if (collocations) {
 
-    detected_2collocations <- corpus %>%
+    detected_2collocations <- tokens %>%
       quanteda.textstats::textstat_collocations() %>%
+      dplyr::as_tibble() %>%
+      dplyr::select(collocation, count) %>%
+      tidyr::extract(collocation,
+                     into = c("word_1", "word_2"),
+                     regex = "([[:alnum:]]+) ([[:alnum:]]+)",
+                      remove = FALSE) %>%
+      dplyr::filter(word_1 != word_2,
+                    count > min_ngram_count) %>%
+      tidyr::unite(collocation, c(word_1, word_2), sep = " ") %>%
       dplyr::pull(collocation)
     compounds_list <- strsplit(detected_2collocations, " ")
 
-    detected_3collocations <- corpus %>%
+    detected_3collocations <- tokens %>%
       quanteda.textstats::textstat_collocations(size = 3) %>%
+      dplyr::as_tibble() %>%
+      dplyr::select(collocation, count) %>%
+      tidyr::extract(collocation,
+                     into = c("word_1", "word_2", "word_3"),
+                     regex = "([[:alnum:]]+) ([[:alnum:]]+) ([[:alnum:]]+)",
+                     remove = FALSE) %>%
+      dplyr::filter(word_1 != word_2 | word_1 != word_3,
+                    count > min_ngram_count) %>%
+      tidyr::unite(collocation, c(word_1, word_2, word_3), sep = " ") %>%
       dplyr::pull(collocation)
 
     compounds_list <- c(compounds_list, strsplit(detected_3collocations, " "))
-    corpus <- corpus %>%
+    corpus <- tokens %>%
       quanteda::tokens_compound(compounds_list, join = FALSE)
 
 
