@@ -3,7 +3,9 @@
 #' @name customize_stopwords
 #' @export
 
-customize_stopwords <- function(corpus_sample = "corpus_sample.txt", stopwords_threshold) {
+customize_stopwords <- function(corpus_sample = "corpus_sample.txt",
+                                shapiro_sample = 50,
+                                stopwords_threshold = 0.05) {
 
   model_file <- run_hsbm(src_docs = NULL, corpus_sample)
 
@@ -14,14 +16,17 @@ customize_stopwords <- function(corpus_sample = "corpus_sample.txt", stopwords_t
   docs_df <- tibble::as_tibble(t(model$get_groups(l=0L)[["p_tw_d"]]),
                     .name_repair = ~paste0("topic_", seq_len(length(.x))))
 
+  if (nrow(docs_df) < shapiro_sample) shapiro_sample <- nrow(docs_df)
+
   stop_topics <- docs_df %>%
+    dplyr::slice_sample(n = shapiro_sample) %>%
     furrr::future_map_dfr(test_norm, .options = furrr::furrr_options(seed = TRUE)) %>%
     tidyr::pivot_longer(
       cols = everything(),
       names_to = "topic",
       values_to = "value"
     ) %>%
-    dplyr::filter(value > stopwords_threshold) %>%
+    dplyr::filter(value > shapiro_threshold) %>%
     dplyr::pull(topic) %>%
     stringr::str_replace_all("topic_", "") %>%
     as.integer()
