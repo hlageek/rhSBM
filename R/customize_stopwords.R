@@ -4,7 +4,7 @@
 #' @export
 
 customize_stopwords <- function(corpus_sample = "corpus_sample.txt",
-                                shapiro_sample = 50,
+                                shapiro_sample = 30,
                                 shapiro_threshold = 0.05) {
 
   model_file <- run_hsbm(src_docs = NULL, corpus_sample)
@@ -17,6 +17,8 @@ customize_stopwords <- function(corpus_sample = "corpus_sample.txt",
                     .name_repair = ~paste0("topic_", seq_len(length(.x))))
 
   if (nrow(docs_df) < shapiro_sample) shapiro_sample <- nrow(docs_df)
+
+  set.seed(123)
 
   stop_topics <- docs_df %>%
     dplyr::slice_sample(n = shapiro_sample) %>%
