@@ -7,7 +7,8 @@ pipeline <- function(titles = "titles.txt",
                      corpus = "corpus.txt",
                      ud_model = "english-ewt-ud-2.5-191206.udpipe",
                      stopwords_sample = NULL,
-                     stopwords_threshold = 0.05,
+                     shapiro_sample = 50,
+                     shapiro_threshold = 0.05,
                      replace_from = NULL,
                      replace_to = NULL,
                      collocations = TRUE,
@@ -59,7 +60,8 @@ pipeline <- function(titles = "titles.txt",
     )
 
     empirical_stopwords <- customize_stopwords(corpus = processed_sample$corpus_processed,
-                        stopwords_threshold = stopwords_threshold)
+                                               shapiro_sample = shapiro_sample,
+                                               shapiro_threshold = shapiro_threshold)
     cat("Custom stopwords helper model removed.\n")
 
   } else {empirical_stopwords <- NULL}
