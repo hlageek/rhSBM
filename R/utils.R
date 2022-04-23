@@ -16,6 +16,8 @@ splitter <- function(x) {
 #' @export
 test_norm <- function(x) {
   set.seed(123)
+  if (sum(x) != 0) {
   broom::tidy(shapiro.test(x)) %>% dplyr::pull(p.value)
+  } else {1}
 }
 
