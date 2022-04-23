@@ -5,7 +5,7 @@
 
 customize_stopwords <- function(corpus_sample = "corpus_sample.txt",
                                 shapiro_sample = 50,
-                                stopwords_threshold = 0.05) {
+                                shapiro_threshold = 0.05) {
 
   model_file <- run_hsbm(src_docs = NULL, corpus_sample)
 
