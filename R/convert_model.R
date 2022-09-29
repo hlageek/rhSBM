@@ -26,7 +26,7 @@ convert_model <- function(model_src, level = NULL) {
 
   for (i in levels) {
 
-    topics_df <- tibble::as_tibble(model$get_groups(l = 0L)[["p_w_tw"]],
+    topics_df <- tibble::as_tibble(model$get_groups(l = as.integer(i))[["p_w_tw"]],
       .name_repair = ~ paste0("topic_", seq_len(length(.x)))
     ) %>%
       dplyr::bind_cols(
