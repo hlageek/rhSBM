@@ -26,7 +26,9 @@ convert_model <- function(model_src, level = NULL) {
 
   for (i in levels) {
 
-    topics_df <- tibble::as_tibble(model$get_groups(l = as.integer(i))[["p_w_tw"]],
+    i <- as.integer(i)
+
+     topics_df <- tibble::as_tibble(model$get_groups(l = i)[["p_w_tw"]],
       .name_repair = ~ paste0("topic_", seq_len(length(.x)))
     ) %>%
       dplyr::bind_cols(
@@ -45,7 +47,9 @@ convert_model <- function(model_src, level = NULL) {
 
 
   for (i in levels) {
-    docs_df <- tibble::as_tibble(t(model$get_groups(l = as.integer(i))[["p_tw_d"]]),
+    i <- as.integer(i)
+
+    docs_df <- tibble::as_tibble(t(model$get_groups(l = i)[["p_tw_d"]]),
       .name_repair = ~ paste0("topic_", seq_len(length(.x)))) %>%
         dplyr::bind_cols(doc = model$documents) %>%
         dplyr::relocate(doc, 1)
