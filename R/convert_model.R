@@ -57,14 +57,14 @@ convert_model <- function(model_src, level = NULL) {
 
     message(paste0("Writing document-topic distributions at level ", i + 1, ".\n"))
 
-    arrow::write_feather(docs_df, paste0(gsub("\\.pickle", "", basename(model_src)), "_documents_level_", i + 1, ".tsv"))
+    arrow::write_feather(docs_df, paste0(gsub("\\.pickle", "", basename(model_src)), "_documents_level_", i + 1, ".feather"))
   }
 
     for (i in levels) {
     i <- as.integer(i)
 
     clusters <- tibble::as_tibble(t(model$get_groups(l = i)[["p_td_d"]]),
-    .name_repair = "unique")
+    .name_repair = "unique", quiet = TRUE)
 
     clusters$cluster <- colnames(clusters)[max.col(clusters,ties.method="first")]
     
@@ -74,7 +74,7 @@ convert_model <- function(model_src, level = NULL) {
 
     message(paste0("Writing document clusters at level ", i + 1, ".\n"))
 
-    arrow::write_feather(clusters_df, paste0(gsub("\\.pickle", "", basename(model_src)), "_clusters_level_", i + 1, ".tsv"))
+    arrow::write_feather(clusters_df, paste0(gsub("\\.pickle", "", basename(model_src)), "_clusters_level_", i + 1, ".feather"))
   }
 
 }
