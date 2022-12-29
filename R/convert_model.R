@@ -64,7 +64,7 @@ convert_model <- function(model_src, level = NULL) {
     i <- as.integer(i)
 
     clusters <- tibble::as_tibble(t(model$get_groups(l = i)[["p_td_d"]]),
-    .name_repair = "unique", quiet = TRUE)
+    .name_repair = ~ paste0("cluster_", seq_len(length(.x))))
 
     clusters$cluster <- colnames(clusters)[max.col(clusters,ties.method="first")]
     
