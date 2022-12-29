@@ -51,8 +51,13 @@ convert_model <- function(model_src, level = NULL) {
 
     docs_df <- tibble::as_tibble(t(model$get_groups(l = i)[["p_tw_d"]]),
       .name_repair = ~ paste0("topic_", seq_len(length(.x)))) %>%
-        dplyr::bind_cols(doc = model$documents) %>%
-        dplyr::relocate(doc, 1)
+        dplyr::bind_cols(
+          doc = model$documents,
+          level = i + 1
+          ) %>%
+        dplyr::relocate(doc, 1) |> 
+        dplyr::relocate(level, 1)
+
 
 
     message(paste0("Writing document-topic distributions at level ", i + 1, ".\n"))
@@ -69,8 +74,11 @@ convert_model <- function(model_src, level = NULL) {
     clusters$cluster <- colnames(clusters)[max.col(clusters,ties.method="first")]
     
     clusters_df <- clusters |> 
-    dplyr::bind_cols(doc = model$documents) |> 
-    dplyr::select(doc, cluster)
+    dplyr::bind_cols(
+      doc = model$documents,
+      level = i + 1
+    ) |> 
+    dplyr::select(level, doc, cluster)
 
     message(paste0("Writing document clusters at level ", i + 1, ".\n"))
 
