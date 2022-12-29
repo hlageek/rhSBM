@@ -24,6 +24,6 @@ check_python <- function(env_name = "rhsbm_env") {
 
   if(!reticulate::py_module_available("graph_tool.all")) suppressWarnings(suppressMessages(reticulate::conda_install(env_name, "graph-tool")))
 
-cat("Python and required dependencies are available.\n")
+message("Python and required dependencies are available.")
 
 }

@@ -39,10 +39,10 @@ convert_model <- function(model_src, level = NULL) {
       dplyr::relocate(level, 1)
 
 
-    cat(paste0("Writing word-topic distributions at level ", i + 1, ".\n"))
+    message(paste0("Writing word-topic distributions at level ", i + 1, ".\n"))
 
-    vroom::vroom_write(topics_df,
-                       paste0(gsub("\\.pickle", "", basename(model_src)), "_topics_level_", i + 1, ".tsv"))
+    arrow::write_feather(topics_df,
+                       paste0(gsub("\\.pickle", "", basename(model_src)), "_topics_level_", i + 1, ".feather"))
   }
 
 
@@ -55,14 +55,26 @@ convert_model <- function(model_src, level = NULL) {
         dplyr::relocate(doc, 1)
 
 
-    cat(paste0("Writing document-topic distributions at level ", i + 1, ".\n"))
+    message(paste0("Writing document-topic distributions at level ", i + 1, ".\n"))
 
-    vroom::vroom_write(docs_df, paste0(gsub("\\.pickle", "", basename(model_src)), "_documents_level_", i + 1, ".tsv"))
+    arrow::write_feather(docs_df, paste0(gsub("\\.pickle", "", basename(model_src)), "_documents_level_", i + 1, ".tsv"))
   }
 
-  # doc_ids_df <- tibble::enframe(model$documents, name = "doc_id", value = "title")
-  #
-  # cat(paste0("Writing document IDs.\n"))
-  #
-  # vroom::vroom_write(doc_ids_df, paste0(gsub("\\.pickle", "", basename(model_src)), "_documents_id.tsv"))
+    for (i in levels) {
+    i <- as.integer(i)
+
+    clusters <- tibble::as_tibble(t(model$get_groups(l = i)[["p_td_d"]]),
+    .name_repair = "unique")
+
+    clusters$cluster <- colnames(clusters)[max.col(clusters,ties.method="first")]
+    
+    clusters_df <- clusters |> 
+    dplyr::bind_cols(doc = model$documents) |> 
+    dplyr::select(doc, cluster)
+
+    message(paste0("Writing document clusters at level ", i + 1, ".\n"))
+
+    arrow::write_feather(clusters_df, paste0(gsub("\\.pickle", "", basename(model_src)), "_clusters_level_", i + 1, ".tsv"))
+  }
+
 }
